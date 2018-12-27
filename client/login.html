@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+    
+    <div class="container">
+
+    <div class="row">
+      <p><br/></p>
+    </div>
+    <p id="fail"></p>
+    <div class="row">
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <div class="panel panel-default">
+          <form name = "login" method='post' action="/login/sendLoginDetails">
+            <p></p>
+            <table class="table table-bordered table-hover">
+            <tbody>
+
+              <tr>
+                  <td class="col-md-6">User:</td>
+                  <td class="col-md-6">
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="username" required maxlength="30">
+                    </div>
+                  </td>
+              </tr>
+
+              <tr>
+                  <td class="col-md-6">Password:</td>
+                  <td class="col-md-6">
+                    <div class="form-group">
+                     <input type="password" class="form-control" name="password" required maxlength="30">
+                    </div>
+                  </td>
+              </tr>
+
+              <tr>
+                <td class="col-md-6"></td>
+                <td class="col-md-6">
+                  <input class="trigger" type="submit" value="Submit">
+                </td>
+              </tr>
+            </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-4"></div>
+            <script type="text/javascript">
+	      function loadAJAXTextDoc() // ensures this is not called till 
+                           // DOM is completely rendered
+		{
+			var xmlhttp;  // global var to hold XMLHttpRequest (AJAX) object
+
+
+
+			xmlhttp=new XMLHttpRequest(); // create the AJAX obj
+			//alert("request created");
+			xmlhttp.open("GET","/login/fail",true); // Method, URL, Async flag
+			//alert("get request opened");
+			xmlhttp.send(); // send the request to the server
+			//alert("request sent");
+
+  
+			xmlhttp.onreadystatechange=function() //call back function 
+			// function is called every time server updates request issued
+			// by AJAX
+  			{
+  				//alert("onreadystatechange function called");
+  				var state = xmlhttp.readyState;
+  				var status = xmlhttp.status;
+  				//alert("state and status "+state+" "+status);
+  				if (xmlhttp.readyState==4 && xmlhttp.status == 200)
+    				{
+					var eventData = xmlhttp.responseText;
+					var p = document.getElementById("fail");
+					p.innerHTML = "Incorrect username or password. Try again.";
+		      			p.style.fontSize = "20px";
+			      		p.style.color = "red";
+			     		p.style.textAlign = "center";
+				
+				}
+  			}  // function called when onreadystatechange occurs
+		}
+		loadAJAXTextDoc();
+      </script>
+    </div>
+  </div>
+  </body>
+</html>

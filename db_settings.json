@@ -1,0 +1,9 @@
+// database login info goes here
+// used by db.js to login and connect to MySQL database
+{
+	"host" : "cse-curly.cse.umn.edu",
+	"user" : "C4131F18***",
+	"password" : "****",
+	"database" : "C4131F18***",
+	"port" : 3306
+}

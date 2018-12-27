@@ -1,0 +1,230 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+       	<div id="navdiv" class="container-fluid">
+        	<ul id="navigation" class="nav navbar-nav">
+            <li><a href="/"><b>Home</b></a></li>
+            <li><a href="/calendar"><b>Calendar</b></a></li>
+            <li><a href="/addEvent"><b>Add Event</b></a></li>
+	    <li><a href="/admin"><b>Admin</b></a></li>
+	    <li><a href="/logout"><b>Logout</b></a></li>
+
+        	</ul>
+      	</div>
+  		</nav>
+		<div id="editWarning">
+		</div>
+    <br><br>
+    <div class="container">
+    		<table class="table" id="userTable">
+          <thead>
+            <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
+              <th scope="col">Login</th>
+	      <th scope="col">Password</th>
+	      <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+	  	<input type="button" value="Add User" onclick="addUser();">
+    		</table>
+  		</div>
+		<div id=myDiv></div>
+      <script type="text/javascript">
+	      function editUser(i) {
+		      var table = document.getElementById("userTable");
+		      var row = table.insertRow(i+2);
+		      var cell0 = row.insertCell(0);
+		      var cell1 = row.insertCell(1);
+	              var cell2 = row.insertCell(2);
+		      var cell3 = row.insertCell(3);
+		      var cell4 = row.insertCell(4);
+		      
+			console.log(table.rows[i+1].cells[1].innerHTML);
+		      cell0.innerHTML = "<form id='form2' value=" + table.rows[i+1].cells[0].innerHTML + "name='acc_id' method='post' action='/admin/editUser'>" + table.rows[i+1].cells[0].innerHTML + "</form><input form='form2' class='form-control' name='acc_id' type='hidden' value=" + table.rows[i+1].cells[0].innerHTML + ">";
+		      cell1.innerHTML = "<input id='formName' value=" + table.rows[i+1].cells[1].innerHTML + " form='form2' type='text' class='form-control' name='acc_name' required maxlength='30' required>";
+		      cell2.innerHTML = "<input id='formLogin' value=" + table.rows[i+1].cells[2].innerHTML + " form='form2' type='text' class='form-control' name='acc_login' required maxlength='30' required>";
+		      cell3.innerHTML = "<input form='form2' type='text' class='form-control' name='acc_password' required maxlength='30' required>";
+		      cell4.innerHTML = "<input form='form2' type='submit' value='Save'> <input type='button' value='Cancel' onclick='cancelEdit(" + i + ");'>";
+		      table.deleteRow(i+1);
+
+
+
+	      }
+
+	      function cancelEdit(i) {
+		      var table = document.getElementById("userTable");
+		      var row = table.insertRow(i+2);
+		      var cell0 = row.insertCell(0);
+		      var cell1 = row.insertCell(1);
+	              var cell2 = row.insertCell(2);
+		      var cell3 = row.insertCell(3);
+		      var cell4 = row.insertCell(4);
+
+		      cell0.innerHTML = document.getElementById("form2").innerHTML;
+		      cell1.innerHTML = document.getElementById("formName").getAttribute("value");
+		      cell2.innerHTML = document.getElementById("formLogin").getAttribute("value");
+		      //cell3.innerHTML = document.getElementById("formPassword").getAttribute("value");
+		      cell4.innerHTML = "<input type='button' value='Edit' onclick='editUser(" + i + ");'><input type='button' value='Trash' onclick='deleteUser(" + i + ");'>";
+		      table.deleteRow(i+1);
+
+
+
+	      }
+
+	      function addUser() {
+		      var table = document.getElementById("userTable");
+		      var row = table.insertRow(-1);
+		      var cell0 = row.insertCell(0);
+		      var cell1 = row.insertCell(1);
+	              var cell2 = row.insertCell(2);
+		      var cell3 = row.insertCell(3);
+		      var cell4 = row.insertCell(4);
+		      
+		      cell0.innerHTML = "<form id='form1' name='addUser' method='post' action='/admin/postUser'></form>";
+		      cell1.innerHTML = "<input form='form1' type='text' class='form-control' name='acc_name' required maxlength='30' required>";
+		      cell2.innerHTML = "<input form='form1' type='text' class='form-control' name='acc_login' required maxlength='30' required>";
+		      cell3.innerHTML = "<input form='form1' type='text' class='form-control' name='acc_password' required maxlength='30' required>";
+		      cell4.innerHTML = "<input form='form1' type='submit' value='Save'> <input type='button' value='Cancel' onclick='cancelAdd();'>"
+
+	      }
+
+	      function cancelAdd() {
+		      var table = document.getElementById("userTable");
+		      var rowCount = table.rows.length;
+
+		      table.deleteRow(rowCount - 1);
+	      }
+
+	      function deleteUser(row) {
+		      var xhr = new XMLHttpRequest();
+		      xhr.open("POST", '/admin/deleteUser', true);
+
+		      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+		      xhr.onreadystatechange = function () {
+			      if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+			      }
+		      }
+
+		      var table = document.getElementById("userTable");
+		      var cells = table.rows.item(row+1).cells;
+		      var user = "user=" + cells.item(2).innerHTML;
+		      var words = document.getElementById("currentUser").innerHTML;
+		      var words2 = words.slice(19);
+
+		      if (words2 !== cells.item(2).innerHTML) {
+			      table.deleteRow(row+1);
+
+		      } else {
+			      var div = document.getElementById("editWarning");
+	      			var li = document.createElement("p");
+	     			 li.innerHTML = "Cannot delete the user that is logged in.";
+	      			li.style.fontSize = "20px";
+			      li.style.color = "red";
+			      li.style.textAlign = "center";
+				div.appendChild(li);
+
+		      }
+		      xhr.send(user);
+	      }
+
+	      function loadAJAXTextDoc() // ensures this is not called till 
+                           // DOM is completely rendered
+		{
+			var xmlhttp;  // global var to hold XMLHttpRequest (AJAX) object
+
+
+
+			xmlhttp=new XMLHttpRequest(); // create the AJAX obj
+			//alert("request created");
+			xmlhttp.open("GET","/admin/getListOfAdmins",true); // Method, URL, Async flag
+			//alert("get request opened");
+			xmlhttp.send(); // send the request to the server
+			//alert("request sent");
+
+  
+			xmlhttp.onreadystatechange=function() //call back function 
+			// function is called every time server updates request issued
+			// by AJAX
+  			{
+  				//alert("onreadystatechange function called");
+  				var state = xmlhttp.readyState;
+  				var status = xmlhttp.status;
+  				//alert("state and status "+state+" "+status);
+  				if (xmlhttp.readyState==4 && xmlhttp.status == 200)
+    				{
+					var userData = JSON.parse(xmlhttp.responseText);
+					var table = document.getElementById("userTable");
+	    				var i;
+	    				for(i = 0; i < userData.length; i++) {
+	        				var row = table.insertRow(i+1);
+						var cell0 = row.insertCell(0);
+						var cell1 = row.insertCell(1);
+						var cell2 = row.insertCell(2);
+						var cell3 = row.insertCell(3);
+						var cell4 = row.insertCell(4);
+						cell0.innerHTML = userData[i].acc_id;
+						cell1.innerHTML = userData[i].acc_name;
+						cell2.innerHTML = userData[i].acc_login;
+						cell4.innerHTML = "<input type='button' value='Edit' onclick='editUser(" + i + ");'><input type='button' value='Trash' onclick='deleteUser(" + i + ");'>";
+	    				}    				
+				}
+  			}  // function called when onreadystatechange occurs
+		}
+
+		function loadAJAXTextDoc2() // ensures this is not called till 
+                           // DOM is completely rendered
+		{
+			var xmlhttp;  // global var to hold XMLHttpRequest (AJAX) object
+
+
+
+			xmlhttp=new XMLHttpRequest(); // create the AJAX obj
+			//alert("request created");
+			xmlhttp.open("GET","/getCurrentUser",true); // Method, URL, Async flag
+			//alert("get request opened");
+			xmlhttp.send(); // send the request to the server
+			//alert("request sent");
+
+  
+			xmlhttp.onreadystatechange=function() //call back function 
+			// function is called every time server updates request issued
+			// by AJAX
+  			{
+  				//alert("onreadystatechange function called");
+  				var state = xmlhttp.readyState;
+  				var status = xmlhttp.status;
+  				//alert("state and status "+state+" "+status);
+  				if (xmlhttp.readyState==4 && xmlhttp.status == 200)
+    				{
+					//var userData = JSON.parse(xmlhttp.responseText);
+					//console.log(xmlhttp.responseText);
+	      				var ul = document.getElementById("navigation");
+	      				var li = document.createElement("p");
+					li.id = "currentUser";
+	      li.appendChild(document.createTextNode("     Logged in as: " + xmlhttp.responseText));
+	      				li.style.fontSize = "20px";
+					li.style.textAlign = "right";
+	      				document.getElementById("navdiv").appendChild(document.createElement("br"));
+					document.getElementById("navdiv").appendChild(li);
+				}
+  			}  // function called when onreadystatechange occurs
+		}
+
+
+		loadAJAXTextDoc();
+		loadAJAXTextDoc2();
+		
+      </script>
+  </body>
+</html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  </head>
+
+  <body>
+    <nav class="navbar navbar-default">
+       	<div id="navdiv" class="container-fluid">
+        	<ul id="navigation" class="nav navbar-nav">
+            <li><a href="/"><b>Home</b></a></li>
+            <li><a href="/calendar"><b>Calendar</b></a></li>
+            <li><a href="/addEvent"><b>Add Event</b></a></li>
+	    <li><a href="/admin"><b>Admin</b></a></li>
+	    <li><a href="/logout"><b>Logout</b></a></li>
+        	</ul>
+      	</div>
+  		</nav>
+
+    <div class="container">
+
+    <div class="row">
+      <p><br/></p>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4"></div>
+      <div class="col-md-4">
+        <div class="panel panel-default">
+          <form name = "addEvent" method = "post" action="/addEvent/postEvent">
+            <p></p>
+            <table class="table table-bordered table-hover">
+            <tbody>
+
+              <tr>
+                  <td class="col-md-6">Event Name</td>
+                  <td class="col-md-6">
+                    <div class="form-group">
+                      <input type="text" class="form-control" name="event_name" required maxlength="30">
+                    </div>
+                  </td>
+              </tr>
+
+              <tr>
+                  <td class="col-md-6">Location</td>
+                  <td class="col-md-6">
+                    <div class="form-group">
+                     <input type="text" class="form-control" name="event_location" required maxlength="30">
+                    </div>
+                  </td>
+              </tr>
+
+              <tr>
+                  <td class="col-md-6">Date</td>
+                  <td class="col-md-6">
+                    <div class="form-group">
+                     <input type="text" class="form-control" name="event_date" required maxlength="30">
+                    </div>
+                  </td>
+              </tr>
+              <tr>
+                <td class="col-md-6"></td>
+                <td class="col-md-6">
+                  <input type="submit" value="Submit">
+                </td>
+              </tr>
+
+            </tbody>
+            </table>
+          </form>
+        </div>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+  </div>
+    <script type="text/javascript">
+	    	function loadAJAXTextDoc2() // ensures this is not called till
+                           // DOM is completely rendered
+		{
+			var xmlhttp;  // global var to hold XMLHttpRequest (AJAX) object
+
+
+
+			xmlhttp=new XMLHttpRequest(); // create the AJAX obj
+			//alert("request created");
+			xmlhttp.open("GET","/getCurrentUser",true); // Method, URL, Async flag
+			//alert("get request opened");
+			xmlhttp.send(); // send the request to the server
+			//alert("request sent");
+
+
+			xmlhttp.onreadystatechange=function() //call back function
+			// function is called every time server updates request issued
+			// by AJAX
+  			{
+  				//alert("onreadystatechange function called");
+  				var state = xmlhttp.readyState;
+  				var status = xmlhttp.status;
+  				//alert("state and status "+state+" "+status);
+  				if (xmlhttp.readyState==4 && xmlhttp.status == 200)
+    				{
+					//var userData = JSON.parse(xmlhttp.responseText);
+					//console.log(xmlhttp.responseText);
+	      				var ul = document.getElementById("navigation");
+	      				var li = document.createElement("p");
+	      li.appendChild(document.createTextNode("     Logged in as: " + xmlhttp.responseText));
+	      				li.style.fontSize = "20px";
+					li.style.textAlign = "right";
+	      				document.getElementById("navdiv").appendChild(document.createElement("br"));
+					document.getElementById("navdiv").appendChild(li);
+				}
+  			}  // function called when onreadystatechange occurs
+		}
+
+		loadAJAXTextDoc2();
+    </script>
+  </body>
+</html>
