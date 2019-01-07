@@ -7,6 +7,12 @@ acc_login = alpha
 acc_password = bravo
 
 ![alt text](express_photos/login.png)
+
+
 ![alt text](express_photos/calendar.png)
+
+
 ![alt text](express_photos/addEvent.png)
+
+
 ![alt text](express_photos/admin.png)
